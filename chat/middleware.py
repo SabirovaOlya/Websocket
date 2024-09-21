@@ -21,8 +21,7 @@ class JWTAuthMiddleware:
         close_old_connections()
         try:
             token = parse_qs(scope["query_string"].decode("utf8")).get('token', None)[0]
-            data = jwt_decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-
+            data = jwt_decode(token, algorithms=["HS256"])
             scope['user'] = await self.get_user(data['user_id'])
         except (TypeError, KeyError, InvalidSignatureError, ExpiredSignatureError, DecodeError):
             scope['user'] = AnonymousUser()
